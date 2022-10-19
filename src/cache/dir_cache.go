@@ -349,8 +349,8 @@ func newDirCache(config *core.Configuration) *dirCache {
 		cache.Suffix = ".tar.gz"
 	}
 	// Absolute paths are allowed. Relative paths are interpreted relative to the repo root.
-	if config.Cache.Dir[0] != '/' {
-		cache.Dir = path.Join(core.RepoRoot, config.Cache.Dir)
+	if !filepath.IsAbs(config.Cache.Dir) {
+		cache.Dir = filepath.Join(core.RepoRoot, config.Cache.Dir)
 	}
 	// Make directory if it doesn't exist.
 	if err := os.MkdirAll(cache.Dir, core.DirPermissions); err != nil {

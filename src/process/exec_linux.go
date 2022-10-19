@@ -1,3 +1,5 @@
+// +build linux
+
 package process
 
 import (
@@ -75,4 +77,15 @@ func boolToString(value bool) string {
 		return "1"
 	}
 	return "0"
+}
+
+// Kill will kill a process with the given signal
+func Kill(pid int, sig syscall.Signal) error {
+	return syscall.Kill(pid, sig)
+}
+
+// ForkExec will run the process asyc
+func ForkExec(cmd string, args []string ) error {
+	_, err := syscall.ForkExec(cmd, args, nil)
+	return err
 }

@@ -1,0 +1,6 @@
+def foo_library(name: str):
+    return genrule(
+        name = name,
+        cmd = "echo test > $OUT",
+        outs = [f"{name}.foo"],
+    )

@@ -9,12 +9,12 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"syscall"
 
 	"github.com/thought-machine/please/src/build"
 	"github.com/thought-machine/please/src/cli/logging"
 	"github.com/thought-machine/please/src/core"
 	"github.com/thought-machine/please/src/fs"
+	"github.com/thought-machine/please/src/process"
 	"github.com/thought-machine/please/src/test"
 )
 
@@ -98,8 +98,7 @@ func deleteDir(dir string, async bool) error {
 	if async {
 		// Note that we can't fork() directly and continue running Go code, but ForkExec() works okay.
 		// Hence why we're using rm rather than fork() + os.RemoveAll.
-		_, err = syscall.ForkExec(rm, []string{rm, "-rf", newDir}, nil)
-		return err
+		return process.ForkExec(rm, []string{rm, "-rf", newDir})
 	}
 	out, err := exec.Command(rm, "-rf", newDir).CombinedOutput()
 	if err != nil {

@@ -382,7 +382,8 @@ func DefaultConfiguration() *Configuration {
 	config.Cache.HTTPConcurrentRequestLimit = 20
 	config.Cache.HTTPRetry = 4
 	if dir, err := os.UserCacheDir(); err == nil {
-		config.Cache.Dir = path.Join(dir, "please")
+		config.Cache.Dir = filepath.Join(dir, "please")
+		log.Warningf("dir: %v %v", dir, config.Cache.Dir)
 	}
 	config.Cache.DirCacheHighWaterMark = 10 * cli.GiByte
 	config.Cache.DirCacheLowWaterMark = 8 * cli.GiByte

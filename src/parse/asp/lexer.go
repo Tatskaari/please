@@ -2,6 +2,7 @@ package asp
 
 import (
 	"io"
+	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -64,6 +65,9 @@ func newLexer(r io.Reader) *lex {
 	if err != nil {
 		fail(Position{Filename: NameOfReader(r)}, err.Error())
 	}
+
+	// TODO(jpoole): we should probably handle this more gracefully
+	b = []byte(strings.ReplaceAll(string(b), "\r\n", "\n"))
 	// If the file doesn't end in a newline, we will reject it with an "unexpected end of file"
 	// error. That's a bit crap so quietly fix it up here.
 	if len(b) > 0 && b[len(b)-1] != '\n' {
@@ -194,8 +198,6 @@ func (l *lex) nextToken() Token {
 	case 0:
 		// End of file (we null terminate it above so this is easy to spot)
 		return Token{Type: EOF, Pos: pos}
-	case '\r':
-		return l.nextToken()
 	case '\n':
 		// End of line, read indent to next non-space character
 		lastIndent := l.indent
